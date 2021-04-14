@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { FormControl, Validators } from '@angular/forms';
-import firebase from 'firebase/app';
+import { AuthService } from './shared/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -17,80 +16,90 @@ export class AppComponent {
     this.hidden = !this.hidden;
   }
 
-  user = localStorage.getItem('keyLogin')
-  login = null;
-  logout = null;
-  accAdmin = null;
-  accManager = null;
-  accLecturer = null;
-  accStudent = null;
-  accGuardian = null;
-
-  constructor(private auth: AngularFireAuth, private fireStore: AngularFirestore) {
-  }
-
+  constructor(
+    public auth: AngularFireAuth,
+    public fireStore: AngularFirestore,
+    public authService: AuthService,
+  ) { }
 
   ngOnInit(): void {
-    // this.showLogin()
-    console.log(this.user);
-    console.log("ahnhhhh")
-    
   }
 
-  // ngDoCheck(){
-  //   let a = this.user
-  //   this.user = sessionStorage.getItem('keyLogin')
-  //   if(this.user != a ){
-  //     this.showLogin()
-  //   }
-  // }
+  logOut() {
+    this.auth.signOut();
+  }
+  addUser() {
+    var users = [
+      {
+        email: 'anh@gmail.com',
+        uid: 'oq1uSzZiFvTL7zIdbM4v3o8nYSQ2',
+        firstName: 'Anh',
+        lastName: 'Nguyen',
+        phone: '0979517820',
+        address: 'Hanoi',
+        dateOfBirth: '21/03/1998',
+        placeOfBirth: 'Hanoi',
+        gender: 'Female',
+        nationality: 'Vietnam',
+        image: '',
+        role: 'admin'
+      },
+      {
+        email: 'manager@gmail.com',
+        uid: 'cXvO04J5MNUfsqeyEq5T2okzHkA3',
+        firstName: 'Anh',
+        lastName: 'Nguyen',
+        phone: '0979517820',
+        address: 'Hanoi',
+        dateOfBirth: '21/03/1998',
+        placeOfBirth: 'Hanoi',
+        gender: 'Female',
+        nationality: 'Vietnam',
+        image: '',
+        role: 'manager'
+      },
+      {
+        email: 'lecturer@gmail.com',
+        uid: '6WIC0Ry2kDbetTcdUxD9Cq2Bfw83',
+        firstName: 'Anh',
+        lastName: 'Nguyen',
+        phone: '0979517820',
+        address: 'Hanoi',
+        dateOfBirth: '21/03/1998',
+        placeOfBirth: 'Hanoi',
+        gender: 'Female',
+        nationality: 'Vietnam',
+        image: '',
+        role: 'lecturer'
+      },
+      {
+        email: 'student@gmail.com',
+        uid: 'tMhHdP2uUncBKGwlmwu2GRF20Aa2',
+        firstName: 'Anh',
+        lastName: 'Nguyen',
+        phone: '0979517820',
+        address: 'Hanoi',
+        dateOfBirth: '21/03/1998',
+        placeOfBirth: 'Hanoi',
+        gender: 'Female',
+        nationality: 'Vietnam',
+        image: '',
+        role: 'student'
+      },
+    ]
+    users.forEach(user => {
+      this.fireStore.collection("users").doc(user.uid).set({
+        user
+      })
+        .then((docRef) => {
+          console.log("Document written with ID: ");
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+    });
+  }
 
-  // showLogin() {
-  //   this.setAcc();
-  //   if (this.user != null) {
-  //     switch (this.user.role) {
-  //       case 'ADMIN': {
-  //         this.accAdmin = "show";
-  //         break;
-  //       }
-  //       case 'MANAGER': {
-  //         this.accManager = "show";
-  //         break;
-  //       }
-  //       case 'LECTURER': {
-  //         this.accLecturer = "show";
-  //         break;
-  //       }
-  //       case 'STUDENT': {
-  //         this.accStudent = "show";
-  //         break;
-  //       }
-  //       case 'GUARDIAN': {
-  //         this.accGuardian = "show";
-  //         break;
-  //       }
-  //     }
-  //   } else {
-  //     this.logout = null;
-  //     this.login = 'login';
-  //   }
-  // }
 
-  // logOut() {
-  //   this.setAcc();
-  //   this.logout = null;
-  //   this.login = 'login';
-  //   sessionStorage.clear()
-  //   this.router.navigate(['/'])
-  // }
-  
-  // setAcc(){
-  //   this.login = null;
-  //   this.accAdmin = null;
-  //   this.accManager = null;
-  //   this.accLecturer = null;
-  //   this.accStudent = null;
-  //   this.accGuardian = null;
-  //   this.logout = "logout";
-  // }
+
 }
